@@ -10,17 +10,19 @@ def extract_structure(image_reader, structure):
     threshold = vtk.vtkImageThreshold()
     threshold.SetInputConnection(image_reader.GetOutputPort())
 
-    if structure == 'skin':
-        threshold.ThresholdByLower(-100)
-        threshold.ThresholdByUpper(20)
-    elif structure == 'bone':
-        threshold.ThresholdByLower(100)
-    elif structure == 'brain':
+    if structure == '1':
+        threshold.ThresholdByLower(20)
+        threshold.ThresholdByUpper(460)
+    elif structure == '2':
+        threshold.ThresholdByLower(40)
+        threshold.ThresholdByUpper(245)
+    elif structure == '3':
+        threshold.ThresholdByLower(0)
+        threshold.ThresholdByUpper(450)
+    elif structure == '4':
         threshold.ThresholdByLower(50)
         threshold.ThresholdByUpper(60)
-    elif structure == 'bone_and_electrodes':
-        threshold.ThresholdByLower(50)
-        threshold.ThresholdByUpper(150)
+    
 
     threshold.ReplaceInOn()
     threshold.SetInValue(0)  # Background value
@@ -41,33 +43,68 @@ def extract_structure(image_reader, structure):
 
     return smoother
 
-def create_color_transfer_function():
+def create_color_transfer_function(structure):
     color_transfer_function = vtk.vtkColorTransferFunction()
-
-    # Asignar colores a valores escalares específicos
-    color_transfer_function.AddRGBPoint(0, 0.878431, 0.301961, 0.301961)      # Value = 0
-    color_transfer_function.AddRGBPoint(66.3563, 0.419608, 0.0, 0.0)          # Value = 66.3563
-    color_transfer_function.AddRGBPoint(97.4167, 1.0, 0.380392, 0.0)          # Value = 97.4167
-    color_transfer_function.AddRGBPoint(168.008, 1.0, 1.0, 0.0)               # Value = 168.008
-    color_transfer_function.AddRGBPoint(186.362, 0.0, 0.501961, 1.0)          # Value = 186.362
-    color_transfer_function.AddRGBPoint(196.245, 1.0, 1.0, 1.0)               # Value = 196.245
-    color_transfer_function.AddRGBPoint(208.952, 0.0, 0.360784, 1.0)          # Value = 208.952
-    color_transfer_function.AddRGBPoint(450.376, 0.278431, 0.278431, 0.858824)# Value = 450.376
-
+    
+    if structure == 1:  # Everything
+        # Asignar colores a valores escalares específicos
+        color_transfer_function.AddRGBPoint(28.5064, 0.188235, 0.188235, 0.0705882) # Value = 28.5064
+        color_transfer_function.AddRGBPoint(33.7963, 0.690196, 0.12549, 0.0627451)  # Value = 33.7963
+        color_transfer_function.AddRGBPoint(50.9885, 0.741176, 0.184314, 0.0745098) # Value = 50.9885
+        color_transfer_function.AddRGBPoint(56.2784, 0.831373, 0.266667, 0.0941176) # Value = 56.2784
+        color_transfer_function.AddRGBPoint(450.376, 0.831373, 0.411765, 0.133333)  # Value = 450.376
+        
+    elif structure == 2:  # Everything (alt)
+        # Asignar colores a valores escalares específicos
+        color_transfer_function.AddRGBPoint(40.0, 0.831373, 0.909804, 0.980392)   # Value = 40.0
+        color_transfer_function.AddRGBPoint(42.5625, 0.74902, 0.862745, 0.960784) # Value = 42.5625
+        color_transfer_function.AddRGBPoint(45.125, 0.694118, 0.827451, 0.941176) # Value = 45.125
+        color_transfer_function.AddRGBPoint(50.25, 0.568627, 0.760784, 0.921569)  # Value = 50.25
+        color_transfer_function.AddRGBPoint(55.375, 0.45098, 0.705882, 0.901961)  # Value = 55.375
+        color_transfer_function.AddRGBPoint(60.5, 0.345098, 0.643137, 0.858824)   # Value = 60.5
+        color_transfer_function.AddRGBPoint(65.625, 0.247059, 0.572549, 0.819608) # Value = 65.625
+        color_transfer_function.AddRGBPoint(70.75, 0.180392, 0.521569, 0.780392)  # Value = 70.75
+        color_transfer_function.AddRGBPoint(72.8, 0.129412, 0.447059, 0.74902)    # Value = 72.8
+        color_transfer_function.AddRGBPoint(76.9, 0.129412, 0.447059, 0.709804)   # Value = 76.9
+        
+    elif structure == 3: #Electrodes and brain
+        # Asignar colores a valores escalares específicos
+        color_transfer_function.AddRGBPoint(0, 0.878431, 0.301961, 0.301961)      # Value = 0
+        color_transfer_function.AddRGBPoint(66.3563, 0.419608, 0.0, 0.0)          # Value = 66.3563
+        color_transfer_function.AddRGBPoint(97.4167, 1.0, 0.380392, 0.0)          # Value = 97.4167
+        color_transfer_function.AddRGBPoint(168.008, 1.0, 1.0, 0.0)               # Value = 168.008
+        color_transfer_function.AddRGBPoint(186.362, 0.0, 0.501961, 1.0)          # Value = 186.362
+        color_transfer_function.AddRGBPoint(196.245, 1.0, 1.0, 1.0)               # Value = 196.245
+        color_transfer_function.AddRGBPoint(208.952, 0.0, 0.360784, 1.0)          # Value = 208.952
+        color_transfer_function.AddRGBPoint(450.376, 0.278431, 0.278431, 0.858824)# Value = 450.376
+    
     return color_transfer_function
 
-def create_opacity_transfer_function():
+def create_opacity_transfer_function(structure):
     opacity_function = vtk.vtkPiecewiseFunction()
+    
+    if structure == 1:  # Everything
+        # Valores de opacidad en diferentes niveles
+        opacity_function.AddPoint(0, 0.0)            # Value = 0
+        opacity_function.AddPoint(81.8865, 0.477679) # Value = 81.8865
+        opacity_function.AddPoint(234.365, 1.0)      # Value = 234.365
+        opacity_function.AddPoint(450.376, 1.0)      # Value = 450.376
+        
+    elif structure == 2:  # Everything (alt)
+        # Valores de opacidad en diferentes niveles
+        opacity_function.AddPoint(40.0, 0.0)       # Value = 40.0
+        opacity_function.AddPoint(245.0, 1.0)      # Value = 245.0
 
-    # Valores de opacidad en diferentes niveles
-    opacity_function.AddPoint(0, 0.0)      
-    opacity_function.AddPoint(22.5894, 0.0)       
-    opacity_function.AddPoint(69.1799, 0.0)       
-    opacity_function.AddPoint(88.9456, 0.53125)              
-    opacity_function.AddPoint(93.1812, 0.0)  
-    opacity_function.AddPoint(127.065, 0.0)  
-    opacity_function.AddPoint(196.245, 0.0)  
-    opacity_function.AddPoint(266.837, 0.901786) 
+    elif structure == 3: #Electrodes and brain
+        # Valores de opacidad en diferentes niveles
+        opacity_function.AddPoint(0, 0.0)      
+        opacity_function.AddPoint(22.5894, 0.0)       
+        opacity_function.AddPoint(69.1799, 0.0)       
+        opacity_function.AddPoint(88.9456, 0.53125)              
+        opacity_function.AddPoint(93.1812, 0.0)  
+        opacity_function.AddPoint(127.065, 0.0)  
+        opacity_function.AddPoint(196.245, 0.0)  
+        opacity_function.AddPoint(266.837, 0.901786) 
 
     return opacity_function
 
@@ -104,18 +141,24 @@ def render_mhd_structure(mhd_file, structure):
     volume_mapper = vtk.vtkGPUVolumeRayCastMapper()
     volume_mapper.SetInputConnection(image_reader.GetOutputPort())
 
-    color_function = create_color_transfer_function()
-    opacity_function = create_opacity_transfer_function()
+    color_function = create_color_transfer_function(structure)
+    opacity_function = create_opacity_transfer_function(structure)
 
     render_window, interactor = create_render_window(volume_mapper, color_function, opacity_function)
     render_window.Render()
     interactor.Start()
 
 if __name__ == "__main__":
-    mhd_file = "E:\Documents\OneDrive - Pontificia Universidad Javeriana\Trabajos_pontifarras\Octavo_Semestre\Tesis\Codigo\CodigoBase\Data\Eraw\patient.mhd"
+    mhd_file = "E:/Documents/OneDrive - Pontificia Universidad Javeriana/Trabajos_pontifarras/Octavo_Semestre/Tesis/Codigo/CodigoBase/Data/raw/patient.mhd"
     
-    # Selecciona la estructura a visualizar: 'skin', 'bone', 'brain', 'bone_and_electrodes'
-    structure_to_render = 'bone_and_electrodes'
+    # Selecciona la estructura a visualizar:
+    ## Everything = 1
+    ## Everything (alt) = 2
+    ## Electrodes and brain = 3
+    ## Brain = 4
+    ## Skull = 5
+    
+    structure_to_render = 3
     render_mhd_structure(mhd_file, structure_to_render)
 
 
