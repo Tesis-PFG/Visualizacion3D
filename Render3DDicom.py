@@ -19,8 +19,8 @@ def extract_structure(dicom_reader, structure):
         threshold.ThresholdByLower(50)
         threshold.ThresholdByUpper(60)
     elif structure == 'bone_and_electrodes':
-        threshold.ThresholdByLower(50)
-        threshold.ThresholdByUpper(150)
+        threshold.ThresholdByLower(0)
+        threshold.ThresholdByUpper(10)
 
     threshold.ReplaceInOn()
     threshold.SetInValue(0)  # Background value
@@ -44,30 +44,24 @@ def extract_structure(dicom_reader, structure):
 def create_color_transfer_function():
     color_transfer_function = vtk.vtkColorTransferFunction()
 
-    # Asignar colores a valores escalares específicos
-    color_transfer_function.AddRGBPoint(0, 0.878431, 0.301961, 0.301961)      # Value = 0
-    color_transfer_function.AddRGBPoint(66.3563, 0.419608, 0.0, 0.0)          # Value = 66.3563
-    color_transfer_function.AddRGBPoint(97.4167, 1.0, 0.380392, 0.0)          # Value = 97.4167
-    color_transfer_function.AddRGBPoint(168.008, 1.0, 1.0, 0.0)               # Value = 168.008
-    color_transfer_function.AddRGBPoint(186.362, 0.0, 0.501961, 1.0)          # Value = 186.362
-    color_transfer_function.AddRGBPoint(196.245, 1.0, 1.0, 1.0)               # Value = 196.245
-    color_transfer_function.AddRGBPoint(208.952, 0.0, 0.360784, 1.0)          # Value = 208.952
-    color_transfer_function.AddRGBPoint(450.376, 0.278431, 0.278431, 0.858824)# Value = 450.376
-
+   # Asignar colores a valores escalares específicos
+    color_transfer_function.AddRGBPoint(28.5064, 0.188235, 0.188235, 0.0705882) # Value = 28.5064
+    color_transfer_function.AddRGBPoint(33.7963, 0.690196, 0.12549, 0.0627451)  # Value = 33.7963
+    color_transfer_function.AddRGBPoint(50.9885, 0.741176, 0.184314, 0.0745098) # Value = 50.9885
+    color_transfer_function.AddRGBPoint(56.2784, 0.831373, 0.266667, 0.0941176) # Value = 56.2784
+    color_transfer_function.AddRGBPoint(450.376, 0.831373, 0.411765, 0.133333)  # Value = 450.376
+    
     return color_transfer_function
 
 def create_opacity_transfer_function():
     opacity_function = vtk.vtkPiecewiseFunction()
 
-    # Valores de opacidad en diferentes niveles
-    opacity_function.AddPoint(0, 0.0)      
-    opacity_function.AddPoint(22.5894, 0.0)       
-    opacity_function.AddPoint(69.1799, 0.0)       
-    opacity_function.AddPoint(88.9456, 0.53125)              
-    opacity_function.AddPoint(93.1812, 0.0)  
-    opacity_function.AddPoint(127.065, 0.0)  
-    opacity_function.AddPoint(196.245, 0.0)  
-    opacity_function.AddPoint(266.837, 0.901786) 
+# Valores de opacidad en diferentes niveles
+    opacity_function.AddPoint(0, 0.0)            # Value = 0
+    opacity_function.AddPoint(81.8865, 0.477679) # Value = 81.8865
+    opacity_function.AddPoint(234.365, 1.0)      # Value = 234.365
+    opacity_function.AddPoint(450.376, 1.0)      # Value = 450.376
+
 
     return opacity_function
 
@@ -109,7 +103,7 @@ def render_dicom_structure(dicom_dir, structure):
     interactor.Start()
 
 if __name__ == "__main__":
-    dicom_directory = "E:\Documents\OneDrive - Pontificia Universidad Javeriana\Trabajos_pontifarras\Octavo_Semestre\Tesis\Codigo\CodigoBase\Data\estudios\RM\T1_3D_TFE_AXI_501"
+    dicom_directory = "E:/Documents/OneDrive - Pontificia Universidad Javeriana/Trabajos_pontifarras/Octavo_Semestre/Tesis/Codigo/CodigoBase/Data/reg/RM/T1_3D_TFE_AXI_501"
     
     # Selecciona la estructura a visualizar: 'skin', 'bone', 'brain', 'bone_and_electrodes'
     structure_to_render = 'bone_and_electrodes'
