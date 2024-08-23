@@ -20,8 +20,8 @@ def extract_structure(image_reader, structure):
         threshold.ThresholdByLower(0)
         threshold.ThresholdByUpper(450)
     elif structure == '4':
-        threshold.ThresholdByLower(50)
-        threshold.ThresholdByUpper(60)
+        threshold.ThresholdByLower(196)
+        threshold.ThresholdByUpper(456)
     
 
     threshold.ReplaceInOn()
@@ -77,6 +77,18 @@ def create_color_transfer_function(structure):
         color_transfer_function.AddRGBPoint(196.245, 1.0, 1.0, 1.0)               # Value = 196.245
         color_transfer_function.AddRGBPoint(208.952, 0.0, 0.360784, 1.0)          # Value = 208.952
         color_transfer_function.AddRGBPoint(450.376, 0.278431, 0.278431, 0.858824)# Value = 450.376
+        
+    elif structure == 4:  # Electrodes
+        color_transfer_function.AddRGBPoint(196.0, 0.301961, 0.047059, 0.090196)    # Value = 196.0
+        color_transfer_function.AddRGBPoint(200.169, 0.396078, 0.0392157, 0.0588235) # Value = 200.169
+        color_transfer_function.AddRGBPoint(204.339, 0.494118, 0.054902, 0.0352941) # Value = 204.339
+        color_transfer_function.AddRGBPoint(208.508, 0.588235, 0.113725, 0.0235294) # Value = 208.508
+        color_transfer_function.AddRGBPoint(212.677, 0.662745, 0.168627, 0.0156863) # Value = 212.677
+        color_transfer_function.AddRGBPoint(216.846, 0.741176, 0.227451, 0.00392157)# Value = 216.846
+        color_transfer_function.AddRGBPoint(221.016, 0.788235, 0.290196, 0.0)       # Value = 221.016
+        color_transfer_function.AddRGBPoint(225.185, 0.862745, 0.380392, 0.0117647) # Value = 225.185
+        color_transfer_function.AddRGBPoint(229.354, 0.917647, 0.458824, 0.0470588) # Value = 229.354
+        color_transfer_function.AddRGBPoint(233.524, 0.917647, 0.521569, 0.0470588) # Value = 233.524
     
     return color_transfer_function
 
@@ -105,6 +117,10 @@ def create_opacity_transfer_function(structure):
         opacity_function.AddPoint(127.065, 0.0)  
         opacity_function.AddPoint(196.245, 0.0)  
         opacity_function.AddPoint(266.837, 0.901786) 
+        
+    elif structure == 4:  # Electrodes
+        opacity_function.AddPoint(196.0, 0.0)      # Value = 196.0
+        opacity_function.AddPoint(245.0, 1.0)      # Value = 245.0
 
     return opacity_function
 
@@ -155,10 +171,9 @@ if __name__ == "__main__":
     ## Everything = 1
     ## Everything (alt) = 2
     ## Electrodes and brain = 3
-    ## Brain = 4
-    ## Skull = 5
+    ## Electrodes = 4
     
-    structure_to_render = 3
+    structure_to_render = 4
     render_mhd_structure(mhd_file, structure_to_render)
 
 
